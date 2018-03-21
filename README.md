@@ -1,0 +1,41 @@
+# Blackjack - Design Patterns
+Blackjack game written for a final project.
+The program is written in Java to implement various design patterns and utilizes the Swing UI toolkit for a GUI.
+
+The following is my report on the final project: 
+
+For my final project I decided to write the popular card game Blackjack.  I thought that writing a game would open a lot of opportunities to utilize the design patterns that we learned in class, as well as provide me with a challenge of learning how to use the graphical user interface libraries contained in the JDK and couple game logic with the them.  In my project, I used the Java Swing toolkit to write the interface, and utilized several design patterns in the development of the game logic, as well as design patterns to allow the game “back-end” to interact with the user interface.  
+
+The design patterns used in this project are as follows:
+Singleton Pattern
+Iterator Pattern
+State Pattern
+Observer Pattern
+
+In this report I will go into detail about how I implemented each of the design patterns, and for each of the design patterns I will reflect on how I felt about the implementation and whether it was useful or if it sacrificed a pragmatic and simple solution for the sake of using a design pattern.
+
+## The Singleton Pattern
+The very first pattern that I wanted to use in this project was the Singleton Pattern.  I think that the Singleton Pattern is a very clean pattern that doesn’t sacrifice code readability or require another person looking at the code to jump down a lot of rabbit holes in order to figure out what the code is doing.  I thought that the Singleton Pattern would be a good choice for designing the class that represented a deck of cards.  I figured, that since there would only be one deck of cards that the program would be using that it would be good to make it a singleton, so that additional decks of cards wouldn't accidentally be instantiated, which could result in the game playing with two separate decks of cards.  I think that the Singleton Pattern was a very good choice for the deck of cards because of this reason.  It is an additional safety measure that was very easy to apply which ensures that the game logic doesn’t get messed up due to having an additional deck by accident.
+
+My implementation for the Singleton Pattern can be found in my project source in the DeckSingleton.java file.
+
+
+
+
+## The Iterator Pattern
+The next pattern I chose to implement was the Iterator Pattern, which I decided to also use for the deck of cards.  Originally I had used a lot of additional class member variables to manage which cards had been drawn from the deck and which ones were still in the deck.  I thought about how that implementation of card management was rather poor and verbose.  So instead of doing a lot of manual removal of cards from the deck and adding the cards to player’s hands and returning cards from player’s hands back to the deck, I decided to make the choice of keeping the ArrayList that contained all of the cards as is at all times, and never removing cards from the list.  Instead I decided to create an iterator that iterates through the deck of cards, and uses the next() method to draw cards instead of creating a different method that draws cards.  The use of the Iterator Pattern here saved a lot of manual management and additional state variable use and replaced it with a simple counter to keep track of which card would be drawn next.  In this project I felt that this pattern was absolutely the right choice because it made verbose and clunky code that I wrote originally into a rather simple and elegant solution to the task.  The Iterator Pattern implementation is the one I am most fond of in this project.
+
+My implementation for the Iterator Pattern can be found in my project source in the DeckSingleton.java file.
+
+
+## The State Pattern
+In order to manage the game state I opted for using the State Pattern.  I figured that since a game of Blackjack has a finite number of states that it could be found in, that using the state pattern to manage whether the game had started or not, whose turn it was, or if the game needed to reset and re-deal the cards because the round was over, would be a fine idea.  To be honest I have mixed feelings about the State Pattern in general, I think that at first glance the State Pattern can look pretty messy, especially if you find yourself creating a large amount of possible states.  That’s one java class per state, and one file in the code base per java class.  I think that the State Pattern has the potential to clutter the project file system and make navigating the codebase a little more difficult.  However I do like the security that it brings to the table where if you don’t want a state to be able to implement a certain state changing method, you dont allow it to, and I could be convinced that the safety that the pattern offers is a justifiable tradeoff.  In this project, I feel that I really had to force this pattern into a bunch of tiny crevices in order to get it to work.  I think that I did a poor job of decoupling the game state management from the user interface, as I had to do a couple of hacks on the UI side in order to display what I wanted to when the state would change.  I have never done an graphical user interface programming in Swing before, as I have traditionally only developed user interfaces in web technologies.  I think that the additional challenge of trying to learn how Swing worked caused me to write some hacky code just to get things up and running with intentions of refactoring the design later.  I tried to refactor the code as best I could after the fact, and I got some of the code looking better, but I am still dissatisfied with this pattern’s implementation.
+
+My implementation for the State Pattern can be found in a whole bunch of places in my project source.  The base interface for game state is found in GameState.java, there are several classes that implement this interface.  The majority of the state changing occurs in the Game.java file, where there is a class called Game, and a method that belongs to that class called run(), which handles all of the logic for the dealer and most of the logic for managing game states.  There are a couple of state changing activities that occur in the ActionBarPanel.java file in the main.UI package, particularly in the ActionListeners defined in the ActionbarPanel class.  These are the hacks I was referring to earlier.
+
+## The Observer Pattern
+This pattern, in theory, should have made the decoupling of the game logic and user interface amazingly simple.  In this project, I think since the State Pattern had already made the interaction between the user interface and game logic a little messy, the observer pattern seemed to act like glorified glue code.  Anyways, in this project the main Game object extends Java’s built in Observable class and the BlackJackUI object is registered as an observer to the game object.  In the game object, whenever state changes the BlackJackUI object is sent a notification to update (or repaint) the user interface.  I wish I would have thought of using the observer pattern before I started implementing the game state code because I think the observer pattern has the necessary design to make the interactions between the user interface and game logic very simple and so the two don’t depend on each others implementations at all.
+
+My implementation of the observer pattern can be found by viewing the Game.java file and the BlackJackUI.java file in my project source.
+
+Overall I am glad that I managed to make some pretty good implementations of design patterns as well as some pretty messy implementations of the design patterns because I learned a little bit more about when patterns can be amazing and when they can be not so amazing.  In addition to that, I feel good about looking in hindsight, that there was definitely a better approach to designing some of the programs components with proper use of design patterns.  I had a lot of fun writing this project it was definitely worthwhile and I am really proud that I was able to implement some of the patterns that we discussed and learned in class as well as test my hand against learning how to build graphical user interfaces in Java with the Swing Toolkit.
